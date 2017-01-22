@@ -96,6 +96,7 @@
   NetLib|MdeModulePkg/Library/DxeNetLib/DxeNetLib.inf
   IpIoLib|MdeModulePkg/Library/DxeIpIoLib/DxeIpIoLib.inf
   DpcLib|MdeModulePkg/Library/DxeDpcLib/DxeDpcLib.inf
+  UdpIoLib|MdeModulePkg/Library/DxeUdpIoLib/DxeUdpIoLib.inf
 
   # Custom Libraries for OS Operations
   # FreeBSDConnectLib|FirmwarePkg/Libraries/FreeBSDConnectLib/FreeBSDConnectLib.inf
@@ -667,7 +668,7 @@
   #
   # PEI
   #
-  ArmPlatformPkg/PrePi/PeiMPCore.inf {
+  FirmwarePkg/Boards/RaspberryPi2/Misc/PrePi/PeiMPCore.inf {
     <LibraryClasses>
       # Use the implementation which has the none-secure bits.
       ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
