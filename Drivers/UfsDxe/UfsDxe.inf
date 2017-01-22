@@ -35,8 +35,6 @@
         MdePkg/MdePkg.dec
         ShellPkg/ShellPkg.dec
         IntelFrameworkModulePkg/IntelFrameworkModulePkg.dec
-        Clover/CloverPkg.dec
-	Clover/GrubFS/efifs.dec
 
 [LibraryClasses]
    UefiRuntimeServicesTableLib
