@@ -25,7 +25,7 @@
 [Packages]
   MdePkg/MdePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
-  Pi2BoardPkg/Pi2BoardPkg.dec
+  FirmwarePkg/FirmwarePkg.dec
 
 [LibraryClasses]
   PcdLib

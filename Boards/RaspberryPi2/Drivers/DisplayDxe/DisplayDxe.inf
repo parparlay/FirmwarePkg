@@ -37,7 +37,7 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   ArmPkg/ArmPkg.dec
-  Pi2BoardPkg/Pi2BoardPkg.dec
+  FirmwarePkg/FirmwarePkg.dec
 
 [LibraryClasses]
   BaseLib

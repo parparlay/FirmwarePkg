@@ -28,7 +28,7 @@
   MdePkg/MdePkg.dec
   ArmPkg/ArmPkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
-  Pi2BoardPkg/Pi2BoardPkg.dec
+  FirmwarePkg/FirmwarePkg.dec
 
 [Pcd.common]
   gArmTokenSpaceGuid.PcdCpuResetAddress

@@ -112,7 +112,7 @@ READ_LOCK_STATUS   = TRUE
   # Remove ConSplitterDxe for now as it needs to be fixed to recognized valid
   # console input, output and error. Currently ConSplitterDxe does support
   # any output as it is not able to open the protocol (ConSplitterSupported)
-  #INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
+  INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
   INF MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
   INF EmbeddedPkg/SerialDxe/SerialDxe.inf
   INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
@@ -202,7 +202,7 @@ READ_STATUS        = TRUE
 READ_LOCK_CAP      = TRUE
 READ_LOCK_STATUS   = TRUE
 
-  INF ArmPlatformPkg/PrePi/PeiMPCoreMPPP.inf
+  INF ArmPlatformPkg/PrePi/PeiMPCore.inf
 
   FILE FV_IMAGE = 9E21FD93-9C72-4c15-8C4B-E77F1DB2D792 {
     SECTION GUIDED EE4E5898-3914-4259-9D6E-DC7BD79403CF PROCESSING_REQUIRED = TRUE {

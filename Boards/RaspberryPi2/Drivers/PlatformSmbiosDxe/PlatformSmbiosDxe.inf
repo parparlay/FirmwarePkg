@@ -39,7 +39,7 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
-  Pi2BoardPkg/Pi2BoardPkg.dec
+  FirmwarePkg/FirmwarePkg.dec
 
 [LibraryClasses]
   UefiBootServicesTableLib

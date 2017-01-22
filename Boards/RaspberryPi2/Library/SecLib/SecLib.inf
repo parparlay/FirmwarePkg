@@ -25,7 +25,7 @@
   MdeModulePkg/MdeModulePkg.dec
   ArmPkg/ArmPkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
-  Pi2BoardPkg/Pi2BoardPkg.dec
+  FirmwarePkg/FirmwarePkg.dec
 
 [LibraryClasses]
   IoLib
