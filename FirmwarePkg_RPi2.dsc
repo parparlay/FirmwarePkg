@@ -667,10 +667,7 @@
   #
   # PEI
   #
-  # The Multi-Processor implementation is used that supports the Parking Protcol as required
-  # by Windows.
-  #
-  ArmPlatformPkg/PrePi/PeiMPCoreMPPP.inf {
+  ArmPlatformPkg/PrePi/PeiMPCore.inf {
     <LibraryClasses>
       # Use the implementation which has the none-secure bits.
       ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
