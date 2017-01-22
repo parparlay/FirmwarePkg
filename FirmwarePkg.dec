@@ -62,7 +62,6 @@
   
   gPi2BoardTokenSpaceGuid.PcdRuntimeMuxingEnabled|FALSE|BOOLEAN|0x00000221
 
-  gArmTokenSpaceGuid.PcdArmMachineType|0|UINT32|0x0000001E
 [PcdsDynamic.ARM]
   gPi2BoardTokenSpaceGuid.PcdGpuMemorySize|0|UINT64|0x00000230
 

@@ -496,7 +496,7 @@
   # An advance user could still enable input instead if needed by specifying
   # a timeout value.
   #
-  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|3
+  gArmPlatformTokenSpaceGuid.PcdPlatformBootTimeOut|3
 
   #
   # ARM OS Loader
@@ -668,7 +668,7 @@
   #
   # PEI
   #
-  FirmwarePkg/Boards/RaspberryPi2/Misc/PrePi/PeiMPCore.inf {
+  ArmPlatformPkg/PrePi/PeiMPCoreMPPP.inf {
     <LibraryClasses>
       # Use the implementation which has the none-secure bits.
       ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
