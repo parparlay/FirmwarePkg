@@ -8,7 +8,7 @@
   BUILD_TARGETS                  = RELEASE|DEBUG
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = FirmwarePkg/FirmwarePkg_RPi2.fdf
-  POST_BUILD			 = Boards/RaspberryPi2/PostBuild.sh
+  POSTBUILD			 = Boards/RaspberryPi2/PostBuild.sh
 
   ########################################################################
   #
@@ -491,7 +491,7 @@
   # An advance user could still enable input instead if needed by specifying
   # a timeout value.
   #
-  gArmPlatformTokenSpaceGuid.PcdPlatformBootTimeOut|0
+  gArmPlatformTokenSpaceGuid.PcdPlatformBootTimeOut|3
 
   gArmPlatformTokenSpaceGuid.PcdDefaultConOutPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi();VenHw(c5deae31-fad2-4030-841b-cfc9644d2c5b)"
   gArmPlatformTokenSpaceGuid.PcdDefaultConInPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi()"
