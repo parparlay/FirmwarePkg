@@ -8,7 +8,7 @@
   BUILD_TARGETS                  = RELEASE|DEBUG
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = FirmwarePkg/FirmwarePkg_RPi2.fdf
-  POSTBUILD			 = Boards/RaspberryPi2/PostBuild.sh
+  POSTBUILDR                     = Boards/RaspberryPi2/PostBuild.sh
 
   ########################################################################
   #
@@ -19,7 +19,7 @@
   #
   #########################################################################
   SECURE_BOOT_ENABLE     	 = FALSE
-  NETWORK_IP6_ENABLE      	 = FALSE
+  NETWORK_IP6_ENABLE       = FALSE
 
 [BuildOptions]
   XCODE:*_*_ARM_PLATFORM_FLAGS == -arch armv7
@@ -98,6 +98,16 @@
   DpcLib|MdeModulePkg/Library/DxeDpcLib/DxeDpcLib.inf
   UdpIoLib|MdeModulePkg/Library/DxeUdpIoLib/DxeUdpIoLib.inf
 
+  # These libraries are used by the dynamic EFI Shell commands
+  ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
+  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
+
+  # UiApp dependencies
+  ReportStatusCodeLib|MdeModulePkg/Library/DxeReportStatusCodeLib/DxeReportStatusCodeLib.inf
+  FileExplorerLib|MdeModulePkg/Library/FileExplorerLib/FileExplorerLib.inf
+  DxeServicesLib|MdePkg/Library/DxeServicesLib/DxeServicesLib.inf
+
   # Custom Libraries for OS Operations
   # FreeBSDConnectLib|FirmwarePkg/Libraries/FreeBSDConnectLib/FreeBSDConnectLib.inf
   # LastOSConnectLib|FirmwarePkg/Libraries/LastOSConnectLib/LastOSConnectLib.inf
@@ -114,6 +124,8 @@
 # [LibraryClasses.ARM] and NULL mean link this library into all ARM images.
 #
   NULL|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
+  NULL|MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
+
   ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
   ArmPlatformLib|FirmwarePkg/Boards/RaspberryPi2/Library/BoardConfigLib/BoardConfigLib.inf
   ArmCpuLib|ArmPkg/Drivers/ArmCpuLib/ArmCortexA9Lib/ArmCortexA9Lib.inf
@@ -523,6 +535,12 @@
   # GPIO by default, and it is the OS's responsibility to mux them away.
   gPi2BoardTokenSpaceGuid.PcdRuntimeMuxingEnabled|TRUE
 
+  # GUID of the UEFI Shell
+  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdShellFile|{ 0x83, 0xA5, 0x04, 0x7C, 0x3E, 0x9E, 0x1C, 0x4F, 0xAD, 0x65, 0xE0, 0x52, 0x68, 0xD0, 0xB4, 0xD1 }
+
+  # GUID of the UI app
+  gEfiMdeModulePkgTokenSpaceGuid.PcdBootManagerMenuFile|{ 0x21, 0xaa, 0x2c, 0x46, 0x14, 0x76, 0x03, 0x45, 0x83, 0x6e, 0x8a, 0xb6, 0xf4, 0x66, 0x23, 0x31 }
+
 [PcdsDynamicDefault]
   # This Pcd is declared as both Fixed and Dynamic in the Arm package dec file
   # The default is Fixed unless we redeclare it in the dsc as Dynamic
@@ -549,7 +567,6 @@
   MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
   EmbeddedPkg/SerialDxe/SerialDxe.inf
   MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
-  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
   MdeModulePkg/Universal/MemoryTest/GenericMemoryTestDxe/GenericMemoryTestDxe.inf
   EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
   EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
@@ -559,8 +576,6 @@
     <LibraryClasses>
       PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
   }
-
-  MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning
@@ -585,6 +600,9 @@
   #
   MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
+  MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
+
 
   #
   # Network Support
@@ -619,16 +637,16 @@
   #
   # Secure Boot Support (Compile when with this option enabled)
   #
-!if $(SECURE_BOOT_ENABLE) == TRUE
-  SecurityPkg/VariableAuthenticated/RuntimeDxe/VariableRuntimeDxe.inf {
-    <LibraryClasses>
-      BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
-      OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
+  !if $(SECURE_BOOT_ENABLE) == TRUE
+    SecurityPkg/VariableAuthenticated/RuntimeDxe/VariableRuntimeDxe.inf {
+      <LibraryClasses>
+        BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
+        OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
   }
-  SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
-!else
-  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
-!endif
+    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
+  !else
+    MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+  !endif
 
   #
   # Logo for the Vendor
@@ -648,6 +666,40 @@
   FirmwarePkg/Drivers/HfsPlusDxe/HfsPlusDxe.inf
   FirmwarePkg/Drivers/SquashfsDxe/SquashfsDxe.inf
   FirmwarePkg/Drivers/UfsDxe/UfsDxe.inf
+
+  #
+  # UI Package
+  #
+  MdeModulePkg/Application/UiApp/UiApp.inf {
+    <LibraryClasses>
+      NULL|MdeModulePkg/Library/DeviceManagerUiLib/DeviceManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootManagerUiLib/BootManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootMaintenanceManagerUiLib/BootMaintenanceManagerUiLib.inf
+  }
+
+  #
+  # Shell Package
+  #
+  ShellPkg/Application/Shell/Shell.inf {
+      <LibraryClasses>
+        ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
+        NULL|ShellPkg/Library/UefiShellLevel2CommandsLib/UefiShellLevel2CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellLevel1CommandsLib/UefiShellLevel1CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellLevel3CommandsLib/UefiShellLevel3CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellDriver1CommandsLib/UefiShellDriver1CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellDebug1CommandsLib/UefiShellDebug1CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellInstall1CommandsLib/UefiShellInstall1CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellNetwork1CommandsLib/UefiShellNetwork1CommandsLib.inf
+        NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf
+        HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
+        PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
+        BcfgCommandLib|ShellPkg/Library/UefiShellBcfgCommandLib/UefiShellBcfgCommandLib.inf
+
+      <PcdsFixedAtBuild>
+        gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0xFF
+        gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
+        gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|8000
+   }
 
 [Components.ARM]
   #
