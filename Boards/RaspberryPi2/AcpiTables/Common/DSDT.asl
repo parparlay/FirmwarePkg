@@ -20,7 +20,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 2)
 {
     Scope (\_SB_)
     {
-        include("pep.asl")
+        include("PEP.asl")
         include("Sdhc.asl")
 
         //
@@ -322,7 +322,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 2)
                 {
                     Memory32Fixed(ReadWrite, 0x3F804000, 0x20)
                     Interrupt(ResourceConsumer, Level, ActiveHigh, Shared) {0x55}
-                    MsftFunctionConfig(Exclusive, PullUp, BCM_ALT0, "\\_SB.GPI0", 0, ResourceConsumer, ) {2, 3}
                 })
                 Return(RBUF)
             }
@@ -369,9 +368,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 2)
                 Name (RBUF, ResourceTemplate () {
                     MEMORY32FIXED(ReadWrite, 0x3F204000, 0x20, )
                     Interrupt(ResourceConsumer, Level, ActiveHigh, Shared) {0x56}
-                    MsftFunctionConfig(Exclusive, PullDown, BCM_ALT0, "\\_SB.GPI0", 0, ResourceConsumer, ) {9, 10, 11} // MISO, MOSI, SCLK
-                    MsftFunctionConfig(Exclusive, PullUp, BCM_ALT0, "\\_SB.GPI0", 0, ResourceConsumer, ) {8}     // CE0
-                    MsftFunctionConfig(Exclusive, PullUp, BCM_ALT0, "\\_SB.GPI0", 0, ResourceConsumer, ) {7}     // CE1
                 })
                 Return(RBUF)
             }
@@ -391,8 +387,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 2)
                 Name (RBUF, ResourceTemplate () {
                     MEMORY32FIXED(ReadWrite, 0x3F215080, 0x40,)
                     Interrupt(ResourceConsumer, Level, ActiveHigh, Shared,) {0x3D}
-                    MsftFunctionConfig(Exclusive, PullDown, BCM_ALT4, "\\_SB.GPI0", 0, ResourceConsumer, ) {19, 20, 21} // MISO, MOSI, SCLK
-                    MsftFunctionConfig(Exclusive, PullDown, BCM_ALT4, "\\_SB.GPI0", 0, ResourceConsumer, ) {16} // CE2
                 })
                 Return(RBUF)
             }
