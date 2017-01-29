@@ -103,11 +103,6 @@
   FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
   SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
 
-  # UiApp dependencies
-  ReportStatusCodeLib|MdeModulePkg/Library/DxeReportStatusCodeLib/DxeReportStatusCodeLib.inf
-  FileExplorerLib|MdeModulePkg/Library/FileExplorerLib/FileExplorerLib.inf
-  DxeServicesLib|MdePkg/Library/DxeServicesLib/DxeServicesLib.inf
-
   # Custom Libraries for OS Operations
   # FreeBSDConnectLib|FirmwarePkg/Libraries/FreeBSDConnectLib/FreeBSDConnectLib.inf
   # LastOSConnectLib|FirmwarePkg/Libraries/LastOSConnectLib/LastOSConnectLib.inf
@@ -666,16 +661,6 @@
   FirmwarePkg/Drivers/HfsPlusDxe/HfsPlusDxe.inf
   FirmwarePkg/Drivers/SquashfsDxe/SquashfsDxe.inf
   FirmwarePkg/Drivers/UfsDxe/UfsDxe.inf
-
-  #
-  # UI Package
-  #
-  MdeModulePkg/Application/UiApp/UiApp.inf {
-    <LibraryClasses>
-      NULL|MdeModulePkg/Library/DeviceManagerUiLib/DeviceManagerUiLib.inf
-      NULL|MdeModulePkg/Library/BootManagerUiLib/BootManagerUiLib.inf
-      NULL|MdeModulePkg/Library/BootMaintenanceManagerUiLib/BootMaintenanceManagerUiLib.inf
-  }
 
   #
   # Shell Package
