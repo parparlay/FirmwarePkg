@@ -64,13 +64,12 @@
   gEfiSimpleFileSystemProtocolGuid
   gEfiUnicodeCollationProtocolGuid
   gEfiUnicodeCollation2ProtocolGuid
-  gMsgLogProtocolGuid
 
 [Pcd]
   gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultLang
   gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultPlatformLang
 
-[BuildOptions.common]  
+[BuildOptions.common]
   *_*_ARM_CC_FLAGS = -DFORMAT=efi-app-arm
   *_*_IA32_CC_FLAGS = -DFORMAT=efi-app-ia32
   *_*_X64_CC_FLAGS = -DFORMAT=efi-app-x64

@@ -41,7 +41,8 @@
 [Packages]
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-
+  FirmwarePkg/FirmwarePkg.dec
+  
 [LibraryClasses]
   UefiBootServicesTableLib
   UefiDriverEntryPoint

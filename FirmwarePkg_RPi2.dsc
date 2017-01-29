@@ -276,7 +276,7 @@
   gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|320
 
   # Default table revision to be ACPI 5.0 compliant
-  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiRevision|0x20
+  # gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiRevision|0x20
 
 # DEBUG_ASSERT_ENABLED       0x01
 # DEBUG_PRINT_ENABLED        0x02
@@ -484,7 +484,7 @@
   #
   gArmTokenSpaceGuid.PcdArmUncachedMemoryMask|0x0000000040000000
 
-  gArmPlatformTokenSpaceGuid.PcdDefaultBootAppPath|L"\\efi\\boot\\bootarm.efi"
+  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L"\\efi\\boot\\bootarm.efi"
 
 
   # These code is a linux boot from efi stub builds, the parameters is very Easy
@@ -503,13 +503,13 @@
   # An advance user could still enable input instead if needed by specifying
   # a timeout value.
   #
-  gArmPlatformTokenSpaceGuid.PcdPlatformBootTimeOut|3
+  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|3
 
   #
   # ARM OS Loader
   #
   # Pi2Board machine type (BCM3_Pi2 = 1546) required for ARM Linux:
-  gArmTokenSpaceGuid.PcdArmMachineType|1546
+  #gArmTokenSpaceGuid.PcdArmMachineType|1546
 
   #
   # MBR+GPT Workaround for SD Card
@@ -705,7 +705,7 @@
   #
   # PEI
   #
-  ArmPlatformPkg/PrePi/PeiMPCoreMPPP.inf {
+  ArmPlatformPkg/PrePi/PeiUniCore.inf {
     <LibraryClasses>
       # Use the implementation which has the none-secure bits.
       ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
