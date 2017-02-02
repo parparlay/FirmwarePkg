@@ -50,8 +50,6 @@
 # include <Guid/FileSystemVolumeLabelInfo.h>
 
 # define va_list VA_LIST
-# define va_start VA_START
-# define va_end VA_END
 # define Atoi (INTN)StrDecimalToUintn
 # define APrint AsciiPrint
 # define strlena AsciiStrLen

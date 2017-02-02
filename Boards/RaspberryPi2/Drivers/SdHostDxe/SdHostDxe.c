@@ -34,6 +34,16 @@
 #include <Bcm2836SdHost.h>
 #include <BcmMailbox.h>
 
+// FIXME: This should be defined in EmbeddedPkg/Include/Protocol/MmcHost.h
+#ifndef MMC_CMD6
+#define MMC_CMD6              (MMC_INDX(6) | MMC_CMD_WAIT_RESPONSE)
+#endif
+#ifndef MMC_ACMD6
+#define MMC_ACMD6             (MMC_INDX(6) | MMC_CMD_WAIT_RESPONSE | MMC_CMD_NO_CRC_RESPONSE)
+#endif
+
+#define DEBUG_MMCHOST_SD 0x00008000
+
 #define SDHOST_BLOCK_BYTE_LENGTH            512
 
 // Driver Timing Parameters

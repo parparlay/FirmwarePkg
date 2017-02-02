@@ -7,8 +7,7 @@ The firmware supports a SecureBoot standard for more security in the boot.
 
 This Firmware is a package for **TianoCore EDK II**, you must a download first the **EDK II**:
 
-    bash-4.4$ git clone https://github.com/tianocore/edk2 # For x86 or x86-64 builds
-    bash-4.4$ git clone https://github.com/ARM-software/edk2 # For ARM or ARM64 builds
+    bash-4.4$ git clone https://github.com/tianocore/edk2
     bash-4.4$ cd edk2
 
 A one to download the EDK II, you should a clone this project:

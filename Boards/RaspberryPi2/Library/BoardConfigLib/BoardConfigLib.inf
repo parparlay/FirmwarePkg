@@ -41,7 +41,7 @@
   BoardConfigMem.c
   
 [Sources.ARM]
-  Arm/BoardConfigHelper.S    | GCC
+  Arm/BoardConfigHelper.S   | GCC
   Arm/HypExceptionSupport.S | GCC
 
 [FeaturePcd]

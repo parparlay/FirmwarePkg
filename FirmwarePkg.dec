@@ -36,9 +36,10 @@
   LedLib|Include/LedLib.h
 
 [Guids.ARM]
-  gPi2BoardTokenSpaceGuid    =  { 0x24b09abe, 0x4e47, 0x481c, { 0xa9, 0xad, 0xce, 0xf1, 0x2c, 0x39, 0x23, 0x27} }
+  gPi2BoardTokenSpaceGuid    =  { 0x24b09abe, 0x4e47, 0x481c, { 0xa9, 0xad, 0xce, 0xf1, 0x2c, 0x39, 0x23, 0x27 } }
+  gWOASupportTokenSpaceGuid  =  { 0x12a735fb, 0x5a36, 0x72bc, { 0x7e, 0x54, 0xae, 0x2f, 0xdc, 0x44, 0xe4, 0x31 } }
 
-[PcdsFixedAtBuild.ARM]
+[PcdsFixedAtBuild.common]
   gPi2BoardTokenSpaceGuid.PcdArasanSDCardMBRGPTWorkaroundEnabled|0|BOOLEAN|0x0000020A
   gPi2BoardTokenSpaceGuid.PcdArasanSDCardMBRGPTWorkaroundGPTOffsetLba|0x00000000|UINT32|0x0000020B
 
@@ -62,15 +63,20 @@
 
   gPi2BoardTokenSpaceGuid.PcdRuntimeMuxingEnabled|FALSE|BOOLEAN|0x00000221
 
+  gWOASupportTokenSpaceGuid.PcdCpuParkedAddress|0x00000000|UINT64|0x00000052
+  gWOASupportTokenSpaceGuid.PcdRestrictCoreCount|0|UINT32|0x0000004A
+  gWOASupportTokenSpaceGuid.PcdRestrictClusters|0|UINT32|0x0000004B
+
   # Mailbox base for the Multi-Processor Parking Protocol
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase|0|UINT32|0x0000003E
+  gWOASupportTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase|0|UINT32|0x0000003B
+
   # Mailbox size (per mailbox/core) for the Multi-Processor Parking Protocol.
   # The spec requires 4Kb per mailbox.
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresMPPPMailboxSize|0x1000|UINT32|0x0000003F
+  gWOASupportTokenSpaceGuid.PcdCPUCoresMPPPMailboxSize|0x1000|UINT32|0x00000031
 
 [PcdsDynamic.ARM]
   gPi2BoardTokenSpaceGuid.PcdGpuMemorySize|0|UINT64|0x00000230
 
 [Protocols]
   gEfiHiiImageExProtocolGuid = { 0x1a1241e6, 0x8f19, 0x41a9, { 0xbc, 0xe, 0xe8, 0xef, 0x39, 0xe0, 0x65, 0x46 }}
-  gEdkiiPlatformLogoProtocolGuid = { 0x53cd299f, 0x2bc1, 0x40c0, { 0x8c, 0x07, 0x23, 0xf6, 0x4f, 0xdb, 0x30, 0xe0 } }
+  gEdkiiPlatformLogoProtocolGuid = { 0x53cd299f, 0x2bc1, 0x40c0, { 0x8c, 0x07, 0x23, 0xf6, 0x4f, 0xdb, 0x30, 0xe0 }}

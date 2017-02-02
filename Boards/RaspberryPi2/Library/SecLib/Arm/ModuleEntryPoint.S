@@ -12,7 +12,6 @@
 //
 
 #include <Base.h>
-#include <AutoGen.h>
 #include <Bcm2836.h>
 #include <Bcm2836Gpio.h>
 #include <AsmMacroIoLib.h>
@@ -20,7 +19,7 @@
 
 // Required for compilation with smc instruction
 .arch_extension sec
-                 
+
 .text
 .align 5
 
@@ -90,7 +89,7 @@ loop:
   GPIO25 ALT4 TCK   - FSEL25
   GPIO26 ALT4 TDI   - FSEL26
   GPIO27 ALT4 TMS   - FSEL27
-  
+
   GPFSEL2[20..29]      29 |28 |27 |26 |25 |24 |23 |22 |21 |20
   JTAG FSEL bit mask   000 000 111 111 111 111 111 111 000 000 = 0x00FFFFC0
   JTAG FSEL ALT Func   000 000 011 011 011 011 011 011 000 000 = 0x006DB6C0
@@ -110,7 +109,7 @@ ASM_PFX(_ConfigureJtag):
 
   // Blink green LED at GPIO47 to indicate JTAG enabled if needed
 
-  LoadConstantToReg (FixedPcdGetBool(PcdJtagLedBlinkOnConfig), r3)
+  MOV32 (r3, FixedPcdGetBool(PcdJtagLedBlinkOnConfig))
   cmp r3, #0
   beq blinkEnd
 
@@ -169,13 +168,13 @@ blinkEnd:
 **/
 ASM_PFX(ArmPlatformSecBootAction):
   mov r9, lr                                // Save a copy of lr since stack has not been set yet
-                                            // which implies that all functions called here should 
+                                            // which implies that all functions called here should
                                             // not call other functions, i.e not to use stack as well
 
-  LoadConstantToReg (FixedPcdGetBool(PcdJtagEnabled), r0)
+  MOV32 (r0, FixedPcdGetBool(PcdJtagEnabled))
   cmp r0, #0
-  beq jtagEnd                               // Config board for JTAG if Pcd flag enabled 
-  
+  beq jtagEnd                               // Config board for JTAG if Pcd flag enabled
+
 jtagStart:
   bl ASM_PFX(ArmReadMpidr)
   bl ASM_PFX(ArmPlatformIsPrimaryCore)
@@ -184,16 +183,16 @@ jtagStart:
 
   bl ASM_PFX(_ConfigureJtag)
 
-  LoadConstantToReg (FixedPcdGetBool(PcdJtagPrimaryCoreDeadLoopPostConfig), r0)
+  MOV32 (r0, FixedPcdGetBool(PcdJtagPrimaryCoreDeadLoopPostConfig))
   cmp r0, #0
   beq jtagEnd
   bl ASM_PFX(_DeadLoop)                      // Primary core enters a dead-loop
 jtagEnd:
-  
+
   adr r1, SecureMonitorExceptionVectorTable
   mcr p15, 0, r1, c12, c0, 1                // Set MVBAR to secure exception vectors
 
-  smc #0                                    // Call into MONITOR mode to reset counter virtual 
+  smc #0                                    // Call into MONITOR mode to reset counter virtual
                                             // offset and switch back to secure-SVC mode
 
   mov lr, r9                                // Restore lr after being possibly overriden by

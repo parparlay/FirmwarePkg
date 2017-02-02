@@ -13,7 +13,6 @@
 
 #include <AsmMacroIoLib.h>
 #include <Library/ArmLib.h>
-#include <AutoGen.h>
 
 .text
 .align 2
@@ -27,16 +26,12 @@ GCC_ASM_EXPORT(ArmPlatformGetSystemMemorySize)
 GCC_ASM_IMPORT(LibPcdGet64)
 GCC_ASM_IMPORT(ArmPlatformStackSet)
 
-GCC_ASM_IMPORT(_gPcd_FixedAtBuild_PcdArmPrimaryCore)
-GCC_ASM_IMPORT(_gPcd_FixedAtBuild_PcdArmPrimaryCoreMask)
-
 //UINTN
 //ArmPlatformGetPrimaryCoreMpId (
 //  VOID
 //  );
 ASM_PFX(ArmPlatformGetPrimaryCoreMpId):
-  LoadConstantToReg (_gPcd_FixedAtBuild_PcdArmPrimaryCore, r0)
-  ldr   r0, [r0]
+  MOV32 (r0, FixedPcdGet32(PcdArmPrimaryCore))
   bx    lr
 
 //UINTN
@@ -44,11 +39,9 @@ ASM_PFX(ArmPlatformGetPrimaryCoreMpId):
 //  IN UINTN MpId
 //  );
 ASM_PFX(ArmPlatformIsPrimaryCore):
-  LoadConstantToReg (_gPcd_FixedAtBuild_PcdArmPrimaryCoreMask, r1)
-  ldr   r1, [r1]
+  MOV32 (r1, FixedPcdGet32(PcdArmPrimaryCoreMask))
   and   r0, r0, r1
-  LoadConstantToReg (_gPcd_FixedAtBuild_PcdArmPrimaryCore, r1)
-  ldr   r1, [r1]
+  MOV32 (r1, FixedPcdGet32(PcdArmPrimaryCore))
   cmp   r0, r1
   moveq r0, #1
   movne r0, #0
@@ -64,7 +57,7 @@ ASM_PFX(ArmPlatformGetCorePosition):
 
 ASM_PFX(ArmPlatformPeiBootAction):
   bx    lr
-  
+
 ASM_PFX(ArmReadCPSRMode):
   mrs     r0, cpsr
   ldr     r1, =CPSR_MODE_MASK
@@ -80,7 +73,7 @@ _LibPcdGet64Addr: .word   LibPcdGet64
 //  VOID
 //  );
 ASM_PFX(ArmPlatformGetSystemMemorySize):
-  
+
   // The caller assumes this function is implemented in pure assembly
   // We can be called before UEFI stacks are properly setup or event existed
   // However, RPi memory assignemnt to GPU and System is specified by a Config
@@ -101,19 +94,16 @@ ASM_PFX(ArmPlatformGetSystemMemorySize):
   mov   r9, lr
   mov   r10, sp
 
-  bl    ASM_PFX(ArmReadMpidr)                     
+  bl    ASM_PFX(ArmReadMpidr)
   mov   r1, r0                                             // r1 = MpId
 
-  LoadConstantToReg (
-    FixedPcdGet32(PcdCPUCoresSecStackBase), r0)            // r0 = StackBase
+  MOV32 (r0, FixedPcdGet32(PcdCPUCoresSecStackBase))       // r0 = StackBase
   // Adjust SP if not 8-byte aligned
   tst   r0, #4
-  subne r0, r0, #4                                                        
-  LoadConstantToReg (
-    FixedPcdGet32(PcdCPUCoreSecPrimaryStackSize), r2)      // r2 = PrimaryStackSize
-  LoadConstantToReg (
-    FixedPcdGet32(PcdCPUCoreSecSecondaryStackSize), r3)    // r3 = SecondaryStackSize
-  
+  subne r0, r0, #4
+  MOV32 (r2, FixedPcdGet32(PcdCPUCoreSecPrimaryStackSize))      // r2 = PrimaryStackSize
+  MOV32 (r3, FixedPcdGet32(PcdCPUCoreSecSecondaryStackSize))    // r3 = SecondaryStackSize
+
   //ArmPlatformStackSet(
   //  StackBase,
   //  MpId,

@@ -30,6 +30,8 @@
 
 #include <Bcm2836.h>
 
+#define DEBUG_TIMER_INT 0x00000200
+
 //
 // Notifications
 //

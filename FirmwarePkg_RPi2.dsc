@@ -8,7 +8,7 @@
   BUILD_TARGETS                  = RELEASE|DEBUG
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = FirmwarePkg/FirmwarePkg_RPi2.fdf
-  POSTBUILDR                     = Boards/RaspberryPi2/PostBuild.sh
+  POSTBUILD                      = FirmwarePkg/Boards/RaspberryPi2/PostBuild.sh
 
   ########################################################################
   #
@@ -19,7 +19,7 @@
   #
   #########################################################################
   SECURE_BOOT_ENABLE     	 = FALSE
-  NETWORK_IP6_ENABLE       = FALSE
+  NETWORK_IP6_ENABLE       	 = FALSE
 
 [BuildOptions]
   XCODE:*_*_ARM_PLATFORM_FLAGS == -arch armv7
@@ -35,16 +35,28 @@
   SynchronizationLib|MdePkg/Library/BaseSynchronizationLib/BaseSynchronizationLib.inf
   HiiLib|MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
   UefiHiiServicesLib|MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
+!if $(TARGET) == RELEASE
+  # Comment/Uncomment to enable processing DEBUG messages and sending
+  # them serially to the terminal
+  DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
+  #DebugLib|MdePkg/Library/BaseDebugLibSerialPort/BaseDebugLibSerialPort.inf
+!else
   DebugLib|MdePkg/Library/BaseDebugLibSerialPort/BaseDebugLibSerialPort.inf
+!endif
 
 !if $(SECURE_BOOT_ENABLE) == TRUE
   PlatformSecureLib|OvmfPkg/Library/PlatformSecureLib/PlatformSecureLib.inf
-  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
-  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
   TpmMeasurementLib|SecurityPkg/Library/DxeTpmMeasurementLib/DxeTpmMeasurementLib.inf
+  AuthVariableLib|SecurityPkg/Library/AuthVariableLib/AuthVariableLib.inf
+
+  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
+  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
 !if $(NETWORK_IP6_ENABLE) == TRUE
   TcpIoLib|MdeModulePkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
 !endif
+!else
+  TpmMeasurementLib|MdeModulePkg/Library/TpmMeasurementLibNull/TpmMeasurementLibNull.inf
+  AuthVariableLib|MdeModulePkg/Library/AuthVariableLibNull/AuthVariableLibNull.inf
 !endif
 
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
@@ -53,7 +65,7 @@
   MemoryInitPeiLib|ArmPlatformPkg/MemoryInitPei/MemoryInitPeiLib.inf
 
   BaseLib|MdePkg/Library/BaseLib/BaseLib.inf
-  BaseMemoryLib|ArmPkg/Library/BaseMemoryLibStm/BaseMemoryLibStm.inf
+  BaseMemoryLib|MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
   PciLib|MdePkg/Library/BasePciLibCf8/BasePciLibCf8.inf
   PerformanceLib|MdePkg/Library/BasePerformanceLibNull/BasePerformanceLibNull.inf
   PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
@@ -63,11 +75,12 @@
   PeCoffGetEntryPointLib|MdePkg/Library/BasePeCoffGetEntryPointLib/BasePeCoffGetEntryPointLib.inf
   CpuExceptionHandlerLib|MdeModulePkg/Library/CpuExceptionHandlerLibNull/CpuExceptionHandlerLibNull.inf
   PrePiLib|EmbeddedPkg/Library/PrePiLib/PrePiLib.inf
-  SerialPortExtLib|EmbeddedPkg/Library/TemplateSerialPortExtLib/TemplateSerialPortExtLib.inf
-  SemihostLib|ArmPkg/Library/SemihostLib/SemihostLib.inf
 
   IoLib|MdePkg/Library/BaseIoLibIntrinsic/BaseIoLibIntrinsic.inf
+  SecurityManagementLib|MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
+  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf 
 
+  PeCoffLib|MdePkg/Library/BasePeCoffLib/BasePeCoffLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
   UefiLib|MdePkg/Library/UefiLib/UefiLib.inf
   HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
@@ -84,9 +97,8 @@
 
   CpuLib|MdePkg/Library/BaseCpuLib/BaseCpuLib.inf
   FdtLib|EmbeddedPkg/Library/FdtLib/FdtLib.inf
-  GenericBdsLib|IntelFrameworkModulePkg/Library/GenericBdsLib/GenericBdsLib.inf
-  MtrrLib|UefiCpuPkg/Library/MtrrLib/MtrrLib.inf
   ExtractGuidedSectionLib|MdePkg/Library/DxeExtractGuidedSectionLib/DxeExtractGuidedSectionLib.inf
+  GenericBdsLib|IntelFrameworkModulePkg/Library/GenericBdsLib/GenericBdsLib.inf
 
   CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
   PlatformBdsLib|DuetPkg/Library/DuetBdsLib/PlatformBds.inf
@@ -112,6 +124,17 @@
   # Multiboot Entry Point for LastOS Bootloader
   # MultibootEntryLib|FirmwarePkg/Libraries/MultibootEntryLib/MultibootEntryLib.inf
 
+  # Boot Manager dependencies
+  UefiBootManagerLib|MdeModulePkg/Library/UefiBootManagerLib/UefiBootManagerLib.inf
+  BootLogoLib|MdeModulePkg/Library/BootLogoLib/BootLogoLib.inf
+  PlatformBootManagerLib|FirmwarePkg/Boards/RaspberryPi2/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
+  CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
+
+  # UiApp dependencies
+  ReportStatusCodeLib|MdeModulePkg/Library/DxeReportStatusCodeLib/DxeReportStatusCodeLib.inf
+  FileExplorerLib|MdeModulePkg/Library/FileExplorerLib/FileExplorerLib.inf
+  DxeServicesLib|MdePkg/Library/DxeServicesLib/DxeServicesLib.inf
+
 [LibraryClasses.ARM]
 #
 # It is not possible to prevent the ARM compiler for generic intrinsic functions.
@@ -121,18 +144,22 @@
   NULL|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
   NULL|MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
 
-  ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
+  ArmLib|ArmPkg/Library/ArmLib/ArmBaseLib.inf
   ArmPlatformLib|FirmwarePkg/Boards/RaspberryPi2/Library/BoardConfigLib/BoardConfigLib.inf
   ArmCpuLib|ArmPkg/Drivers/ArmCpuLib/ArmCortexA9Lib/ArmCortexA9Lib.inf
+  ArmMmuLib|ArmPkg/Library/ArmMmuLib/ArmMmuBaseLib.inf
+  ArmSoftFloatLib|ArmPkg/Library/ArmSoftFloatLib/ArmSoftFloatLib.inf
+
   ArmPlatformStackLib|ArmPlatformPkg/Library/ArmPlatformStackLib/ArmPlatformStackLib.inf
   ArmSmcLib|ArmPkg/Library/ArmSmcLib/ArmSmcLib.inf
   ArmGenericTimerCounterLib|ArmPkg/Library/ArmGenericTimerPhyCounterLib/ArmGenericTimerPhyCounterLib.inf
   TimerLib|ArmPkg/Library/ArmArchTimerLib/ArmArchTimerLib.inf
   RealTimeClockLib|FirmwarePkg/Boards/RaspberryPi2/Library/VirtualRealTimeClockLib/VirtualRealTimeClockLib.inf
   UncachedMemoryAllocationLib|ArmPkg/Library/UncachedMemoryAllocationLib/UncachedMemoryAllocationLib.inf
+  SemihostLib|ArmPkg/Library/SemihostLib/SemihostLib.inf
 
   EfiResetSystemLib|FirmwarePkg/Boards/RaspberryPi2/Library/ResetSystemLib/ResetSystemLib.inf
-  PeCoffExtraActionLib|ArmPkg/Library/DebugPeCoffExtraActionLib/DebugPeCoffExtraActionLib.inf
+  PeCoffExtraActionLib|MdePkg/Library/BasePeCoffExtraActionLibNull/BasePeCoffExtraActionLibNull.inf
 
   CacheMaintenanceLib|ArmPkg/Library/ArmCacheMaintenanceLib/ArmCacheMaintenanceLib.inf
   DefaultExceptionHandlerLib|ArmPkg/Library/DefaultExceptionHandlerLib/DefaultExceptionHandlerLib.inf
@@ -154,7 +181,6 @@
   DebugAgentLib|MdeModulePkg/Library/DebugAgentLibNull/DebugAgentLibNull.inf
   DmaLib|ArmPkg/Library/ArmDmaLib/ArmDmaLib.inf
 
-  #ArmBdsHelperLib|ArmPkg/Library/ArmBdsHelperLib/ArmBdsHelperLib.inf
   BdsLib|ArmPkg/Library/BdsLib/BdsLib.inf
 
 [LibraryClasses.common.SEC]
@@ -168,10 +194,9 @@
   HobLib|EmbeddedPkg/Library/PrePiHobLib/PrePiHobLib.inf
   MemoryAllocationLib|EmbeddedPkg/Library/PrePiMemoryAllocationLib/PrePiMemoryAllocationLib.inf
 
-  ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7LibSec.inf
+  ArmLib|ArmPkg/Library/ArmLib/ArmBaseLib.inf
   ArmPlatformSecLib|FirmwarePkg/Boards/RaspberryPi2/Library/SecLib/SecLib.inf
   ArmTrustedMonitorLib|ArmPlatformPkg/Library/ArmTrustedMonitorLibNull/ArmTrustedMonitorLibNull.inf
-  ArmPlatformGlobalVariableLib|ArmPlatformPkg/Library/ArmPlatformGlobalVariableLib/Sec/SecArmPlatformGlobalVariableLib.inf
   PlatformPeiLib|ArmPlatformPkg/PlatformPei/PlatformPeiLib.inf
   PrePiHobListPointerLib|ArmPlatformPkg/Library/PrePiHobListPointerLib/PrePiHobListPointerLib.inf
 
@@ -180,15 +205,6 @@
 
 [LibraryClasses.ARM.PEI_CORE]
   PcdLib|FirmwarePkg/Boards/RaspberryPi2/Library/PcdConfigLib/PcdConfigLib.inf
-
-[LibraryClasses.common.DXE_DRIVER]
-  ReportStatusCodeLib|IntelFrameworkModulePkg/Library/DxeReportStatusCodeLibFramework/DxeReportStatusCodeLib.inf
-  DxeServicesLib|MdePkg/Library/DxeServicesLib/DxeServicesLib.inf
-  SecurityManagementLib|MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
-  PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
-
-[LibraryClasses.ARM.DXE_DRIVER]
-  ArmPlatformGlobalVariableLib|ArmPlatformPkg/Library/ArmPlatformGlobalVariableLib/Dxe/DxeArmPlatformGlobalVariableLib.inf
 
 [LibraryClasses.common.DXE_CORE]
   HobLib|MdePkg/Library/DxeCoreHobLib/DxeCoreHobLib.inf
@@ -229,10 +245,6 @@
 
   PeCoffLib|MdePkg/Library/BasePeCoffLib/BasePeCoffLib.inf
 
-!if $(SECURE_BOOT_ENABLE) == TRUE
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
-!endif
-
 [PcdsFeatureFlag.common]
   gEfiMdePkgTokenSpaceGuid.PcdComponentNameDisable|TRUE
   gEfiMdePkgTokenSpaceGuid.PcdDriverDiagnosticsDisable|TRUE
@@ -253,19 +265,31 @@
 
   gEmbeddedTokenSpaceGuid.PcdCacheEnable|TRUE
 
+  # Use the Vector Table location in CpuDxe. We will not copy the Vector Table at PcdCpuVectorBaseAddress
+  gArmTokenSpaceGuid.PcdRelocateVectorTable|FALSE
+
   gEmbeddedTokenSpaceGuid.PcdPrePiProduceMemoryTypeInformationHob|TRUE
-  gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|FALSE
+  gArmTokenSpaceGuid.PcdCpuDxeProduceDebugSupport|FALSE
+
+  gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|TRUE
 
   ## If TRUE, Graphics Output Protocol will be installed on virtual handle created by ConsplitterDxe.
   #  It could be set FALSE to save size.
-  # ConsplitterDxe is currently not used
   gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|TRUE
+
+  # The secondary cores are parked in the Pi2 boot firwmware. This flag triggers
+  # the Pre Pi MP core component to send a signal releasing them (in the Pi 2 case
+  # this is the write of the jump address into a mailbox implemented in the
+  # BCM specific GIC component in order to match the ARM GIC case)
+  gArmPlatformTokenSpaceGuid.PcdSendSgiToBringUpSecondaryCores|TRUE
+
+  gArmPlatformTokenSpaceGuid.PcdBdsLinuxSupport|TRUE
 
 [PcdsFixedAtBuild.common]
   gArmPlatformTokenSpaceGuid.PcdFirmwareVendor|"Raspberry Pi 2"
   gArmPlatformTokenSpaceGuid.PcdCoreCount|4
 
-  gEmbeddedTokenSpaceGuid.PcdEmbeddedPrompt|"Shell>"
+  gEmbeddedTokenSpaceGuid.PcdEmbeddedPrompt|"RaspberryPi2"
   gEfiMdePkgTokenSpaceGuid.PcdMaximumUnicodeStringLength|1000000
   gEfiMdePkgTokenSpaceGuid.PcdMaximumAsciiStringLength|1000000
   gEfiMdePkgTokenSpaceGuid.PcdMaximumLinkedListLength|1000000
@@ -276,7 +300,20 @@
   gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|320
 
   # Default table revision to be ACPI 5.0 compliant
-  # gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiRevision|0x20
+  #gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiExposedTableVersions|0x20
+
+  # We want to use the Shell Libraries but don't want it to initialise
+  # automatically. We initialise the libraries when the command is called by the
+  # Shell.
+  gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
+
+  # UEFI Shell GUID
+  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdShellFile|{ 0x83, 0xA5, 0x04, 0x7C, 0x3E, 0x9E, 0x1C, 0x4F, 0xAD, 0x65, 0xE0, 0x52, 0x68, 0xD0, 0xB4, 0xD1 }
+
+  # UI app GUID
+  gEfiMdeModulePkgTokenSpaceGuid.PcdBootManagerMenuFile|{ 0x21, 0xaa, 0x2c, 0x46, 0x14, 0x76, 0x03, 0x45, 0x83, 0x6e, 0x8a, 0xb6, 0xf4, 0x66, 0x23, 0x31 }
+
+  gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
 
 # DEBUG_ASSERT_ENABLED       0x01
 # DEBUG_PRINT_ENABLED        0x02
@@ -284,11 +321,11 @@
 # CLEAR_MEMORY_ENABLED       0x08
 # ASSERT_BREAKPOINT_ENABLED  0x10
 # ASSERT_DEADLOOP_ENABLED    0x20
-#!if $(TARGET) == RELEASE
-#  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x21
-#!else
+!if $(TARGET) == RELEASE
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x21
+!else
   gEfiMdePkgTokenSpaceGuid.PcdDebugPropertyMask|0x2f
-#!endif
+!endif
 
   #  DEBUG_INIT       0x00000001  // Initialization
   #  DEBUG_WARN       0x00000002  // Warnings
@@ -315,7 +352,7 @@
   #
   # By default only enable init, error, warning and load debug prints to minimize
   # debug messages. Use "0x8FEF4DCF" for detailed debugging purposes.
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel| 0x80000003 # 0x8FEF4DCF
+  #gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel| 0x80000003 # 0x8FEF4DCF
 
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x07
 
@@ -344,13 +381,14 @@
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderCode|10
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderData|0
 
+  gEfiMdePkgTokenSpaceGuid.PcdDefaultTerminalType|4
+
 !if $(SECURE_BOOT_ENABLE) == TRUE
   # override the default values from SecurityPkg to ensure images from all sources are verified in secure boot
   gEfiSecurityPkgTokenSpaceGuid.PcdOptionRomImageVerificationPolicy|0x04
   gEfiSecurityPkgTokenSpaceGuid.PcdFixedMediaImageVerificationPolicy|0x04
   gEfiSecurityPkgTokenSpaceGuid.PcdRemovableMediaImageVerificationPolicy|0x04
 !endif
-
 #
 # Pi2 board Specific PCDs
 #
@@ -394,7 +432,6 @@
   #
 
   gArmTokenSpaceGuid.PcdCpuVectorBaseAddress|0x000E0000  # Exception vector table.
-  gEmbeddedTokenSpaceGuid.PcdPrePiHobBase|0x000E1000     # First page, head of the HOB list.
 
   #
   # Stacks for MPCores in Secure World
@@ -432,7 +469,7 @@
   #       fields for the four cores as 0x000F0000, 0x000F1000, 0x000F2000 & 0x000F3000. Therefore, if
   #       changed here it MUST also be changed in the ACPI tables to match.
   #
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase|0x000F0000
+  gWOASupportTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase|0x000F0000
 
   #
   # In the BCM Gic implementation this represents the address of the secondary
@@ -484,32 +521,10 @@
   #
   gArmTokenSpaceGuid.PcdArmUncachedMemoryMask|0x0000000040000000
 
-  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L"\\efi\\boot\\bootarm.efi"
-
-
-  # These code is a linux boot from efi stub builds, the parameters is very Easy
-  #     BootAppPath - Indicate a EFI Firmware the route to load a Linux Kernel with EFI STUB
-  #     BootArgument - Indicate a EFI Firmware the cmdline to load in the kernel (No needs a cmdline with this firmware :D)
-
-  #gArmPlatformTokenSpaceGuid.PcdDefaultBootAppPath|L"\\efi\\debian\\vmlinuz.efi"
-  #gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|"console=tty0 console=ttyS2,115200n8 root=UUID=a4af765b-c2b5-48f4-9564-7a4e9104c4f6 rootwait ro earlyprintk"
-
-  gArmPlatformTokenSpaceGuid.PcdDefaultConOutPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi();VenHw(c5deae31-fad2-4030-841b-cfc9644d2c5b)"
-  gArmPlatformTokenSpaceGuid.PcdDefaultConInPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi()"
   #
-  # Boot time is set 0 to avoid user input from halting boot. Typically
-  # WinDBG would be connected and generate a ping to the board which
-  # is interpreted as an input and would halt UEFI from loading the OS.
-  # An advance user could still enable input instead if needed by specifying
-  # a timeout value.
+  # Default boot timeout
   #
-  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|3
-
-  #
-  # ARM OS Loader
-  #
-  # Pi2Board machine type (BCM3_Pi2 = 1546) required for ARM Linux:
-  #gArmTokenSpaceGuid.PcdArmMachineType|1546
+  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|5
 
   #
   # MBR+GPT Workaround for SD Card
@@ -524,17 +539,14 @@
   gPi2BoardTokenSpaceGuid.PcdArasanSDCardMBRGPTWorkaroundEnabled|0
 !endif
 
+  # JTAG enable flag enabled on DEBUG build only
+!if $(TARGET) == DEBUG
   gPi2BoardTokenSpaceGuid.PcdJtagEnabled|TRUE
+!endif
 
   # Set this if the OS supports runtime pin muxing. This will leave pins as
   # GPIO by default, and it is the OS's responsibility to mux them away.
   gPi2BoardTokenSpaceGuid.PcdRuntimeMuxingEnabled|TRUE
-
-  # GUID of the UEFI Shell
-  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdShellFile|{ 0x83, 0xA5, 0x04, 0x7C, 0x3E, 0x9E, 0x1C, 0x4F, 0xAD, 0x65, 0xE0, 0x52, 0x68, 0xD0, 0xB4, 0xD1 }
-
-  # GUID of the UI app
-  gEfiMdeModulePkgTokenSpaceGuid.PcdBootManagerMenuFile|{ 0x21, 0xaa, 0x2c, 0x46, 0x14, 0x76, 0x03, 0x45, 0x83, 0x6e, 0x8a, 0xb6, 0xf4, 0x66, 0x23, 0x31 }
 
 [PcdsDynamicDefault]
   # This Pcd is declared as both Fixed and Dynamic in the Arm package dec file
@@ -560,17 +572,11 @@
   # console input, output and error
   MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
   MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
-  EmbeddedPkg/SerialDxe/SerialDxe.inf
   MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
-  MdeModulePkg/Universal/MemoryTest/GenericMemoryTestDxe/GenericMemoryTestDxe.inf
+
   EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
   EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
   EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
-
-  IntelFrameworkModulePkg/Universal/BdsDxe/BdsDxe.inf {
-    <LibraryClasses>
-      PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
-  }
 
   #
   # FAT filesystem + GPT/MBR partitioning
@@ -584,6 +590,7 @@
   #
   MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
+  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
 
   #
   # SMBIOS Support
@@ -597,7 +604,7 @@
   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
   MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
-
+  MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
 
   #
   # Network Support
@@ -632,12 +639,12 @@
   #
   # Secure Boot Support (Compile when with this option enabled)
   #
+
   !if $(SECURE_BOOT_ENABLE) == TRUE
-    SecurityPkg/VariableAuthenticated/RuntimeDxe/VariableRuntimeDxe.inf {
+    MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf {
       <LibraryClasses>
-        BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
-        OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-  }
+        NULL|SecurityPkg/Library/DxeImageVerificationLib/DxeImageVerificationLib.inf
+    }
     SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
   !else
     MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
@@ -657,10 +664,10 @@
   #
   # Filesystem Drivers for OS Connect
   #
-  FirmwarePkg/Drivers/BtrfsDxe/BtrfsDxe.inf
-  FirmwarePkg/Drivers/HfsPlusDxe/HfsPlusDxe.inf
-  FirmwarePkg/Drivers/SquashfsDxe/SquashfsDxe.inf
-  FirmwarePkg/Drivers/UfsDxe/UfsDxe.inf
+  # FirmwarePkg/Drivers/BtrfsDxe/BtrfsDxe.inf
+  # FirmwarePkg/Drivers/HfsPlusDxe/HfsPlusDxe.inf
+  # FirmwarePkg/Drivers/SquashfsDxe/SquashfsDxe.inf
+  # FirmwarePkg/Drivers/UfsDxe/UfsDxe.inf
 
   #
   # Shell Package
@@ -686,11 +693,21 @@
         gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|8000
    }
 
+  #
+  # Ui App
+  #
+  MdeModulePkg/Application/UiApp/UiApp.inf {
+    <LibraryClasses>
+      NULL|MdeModulePkg/Library/DeviceManagerUiLib/DeviceManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootManagerUiLib/BootManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootMaintenanceManagerUiLib/BootMaintenanceManagerUiLib.inf
+  }
+
 [Components.ARM]
   #
   # SEC
   #
-  ArmPlatformPkg/Sec/Sec.inf {
+  FirmwarePkg/Boards/RaspberryPi2/Arm/Sec/Sec.inf {
     <LibraryClasses>
       # Since the 2836 doesn't have an ARM GIC we use the BCM "stub" library instead to provide only
       # enough functionality to be able to get the platform started and support multi-processor through
@@ -705,18 +722,19 @@
   #
   # PEI
   #
-  ArmPlatformPkg/PrePi/PeiUniCore.inf {
+  # The Multi-Processor implementation is used that supports the Parking Protcol as required
+  # by Windows.
+  #
+  FirmwarePkg/Boards/RaspberryPi2/Arm/PrePi/PeiMPCoreMPPP.inf {
     <LibraryClasses>
       # Use the implementation which has the none-secure bits.
-      ArmLib|ArmPkg/Library/ArmLib/ArmV7/ArmV7Lib.inf
+      ArmLib|ArmPkg/Library/ArmLib/ArmBaseLib.inf
 
       # Since the 2836 doesn't have an ARM GIC we use the BCM "stub" library instead to provide only
       # enough functionality to be able to get the platform started and support multi-processor through
       # the MP Parking Protocol. The BCM interrupt controller has no secure/none-secure knowledge.
       # Real interrupts for EFI are supported on the BCM part in the Interrupt DXE implementation.
       ArmGicLib|FirmwarePkg/Boards/RaspberryPi2/Library/BcmGicLib/BcmGicLib.inf
-
-      ArmPlatformGlobalVariableLib|ArmPlatformPkg/Library/ArmPlatformGlobalVariableLib/PrePi/PrePiArmPlatformGlobalVariableLib.inf
   }
 
   #
@@ -768,8 +786,3 @@
   # SMBIOS Support
   #
   FirmwarePkg/Boards/RaspberryPi2/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
-
-  #
-  # Bds
-  #
-  ArmPlatformPkg/Bds/Bds.inf

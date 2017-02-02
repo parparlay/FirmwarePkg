@@ -53,7 +53,6 @@ FV = FVMAIN_COMPACT
 # module statements.
 #
 ################################################################################
-
 [FV.FVMAIN_SEC]
 FvAlignment        = 8
 ERASE_POLARITY     = 1
@@ -72,7 +71,7 @@ READ_STATUS        = TRUE
 READ_LOCK_CAP      = TRUE
 READ_LOCK_STATUS   = TRUE
 
-  INF ArmPlatformPkg/Sec/Sec.inf
+  INF FirmwarePkg/Boards/RaspberryPi2/Arm/Sec/Sec.inf
 
 [FV.FvMain]
 BlockSize          = 0x1
@@ -114,7 +113,6 @@ READ_LOCK_STATUS   = TRUE
   # any output as it is not able to open the protocol (ConSplitterSupported)
   INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
   INF MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
-  INF EmbeddedPkg/SerialDxe/SerialDxe.inf
   INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
 
   INF EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
@@ -140,6 +138,7 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   INF MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
   INF RuleOverride=ACPITABLE FirmwarePkg/Boards/RaspberryPi2/AcpiTables/AcpiTables.inf
+  INF MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
 
   #
   # ARM GIC+GIT Drivers
@@ -184,7 +183,13 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
   INF MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
   INF MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
-  INF ArmPlatformPkg/Bds/Bds.inf
+  INF MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
+  INF MdeModulePkg/Application/UiApp/UiApp.inf
+
+  #
+  # Logo Splash Boot 
+  #
+  INF FirmwarePkg/Drivers/LogoDxe/LogoDxe.inf
 
 [FV.FVMAIN_COMPACT]
 FvAlignment        = 8
@@ -204,17 +209,13 @@ READ_STATUS        = TRUE
 READ_LOCK_CAP      = TRUE
 READ_LOCK_STATUS   = TRUE
 
-  # INF ArmPlatformPkg/PrePi/PeiMPCoreMPPP.inf
-  INF ArmPlatformPkg/PrePi/PeiUniCore.inf
+  INF FirmwarePkg/Boards/RaspberryPi2/Arm/PrePi/PeiMPCoreMPPP.inf
+
 
   FILE FV_IMAGE = 9E21FD93-9C72-4c15-8C4B-E77F1DB2D792 {
     SECTION GUIDED EE4E5898-3914-4259-9D6E-DC7BD79403CF PROCESSING_REQUIRED = TRUE {
       SECTION FV_IMAGE = FVMAIN
     }
-  }
-
-FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
-    SECTION RAW = FirmwarePkg/Drivers/LogoDxe/Logo.bmp
   }
 
 ################################################################################

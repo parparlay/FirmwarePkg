@@ -37,10 +37,11 @@
   ArmPlatformPkg/ArmPlatformPkg.dec
   MdePkg/MdePkg.dec
   FirmwarePkg/FirmwarePkg.dec
-  
+
 [FixedPcd]
   gArmTokenSpaceGuid.PcdCpuResetAddress
   gArmTokenSpaceGuid.PcdFvBaseAddress
 
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase
-  gArmPlatformTokenSpaceGuid.PcdCPUCoresMPPPMailboxSize
+  gWOASupportTokenSpaceGuid.PcdCPUCoresMPPPMailboxBase
+  gWOASupportTokenSpaceGuid.PcdCPUCoresMPPPMailboxSize
+

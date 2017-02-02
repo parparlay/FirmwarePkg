@@ -39,6 +39,7 @@
         MdePkg/MdePkg.dec
         ShellPkg/ShellPkg.dec
         IntelFrameworkModulePkg/IntelFrameworkModulePkg.dec
+	FirmwarePkg/Drivers/FileSystem.dec
 
 [LibraryClasses]
    UefiRuntimeServicesTableLib
