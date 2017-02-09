@@ -24,36 +24,69 @@ function usage()
 
 function build_startup_code()
 {
-	local size=$2
-	local fname=$1
-	local outfile=$3
+	if [$TARGET_TOOLS == "ARMGCC"]; then
+		local size=$2
+		local fname=$1
+		local outfile=$3
 
-	if [ -z $size ]; then
-		usage
-	fi
+		if [ -z $size ]; then
+			usage
+		fi
 
-	if [ -z $fname ]; then
-		usage
-	fi
+		if [ -z $fname ]; then
+			usage
+		fi
 
-	if [ -z $outfile ]; then
-		usage
-	fi
+		if [ -z $outfile ]; then
+			usage
+		fi
 
-	echo -e "# Building `basename $fname` #\n"
-	gcc -c $fname -o /tmp/$$.o -march=armv7-a
-	echo -e "# Generating `basename $outfile` #\n"
-	objcopy /tmp/$$.o -O binary --pad-to $size $outfile
+		echo -e "# Building `basename $fname` #\n"
+		arm-none-eabi-gcc -c $fname -o /tmp/$$.o -march=armv7-a
+		echo -e "# Generating `basename $outfile` #\n"
+		arm-none-eabi-objcopy /tmp/$$.o -O binary --pad-to $size $outfile
 
-	retval=$?
+		retval=$?
 
-	if [ $retval -eq 0 ]; then
-		echo -e "`basename $outfile` Binary Blob Generation ## Succeeded ##\n"
+		if [ $retval -eq 0 ]; then
+			echo -e "`basename $outfile` Binary Blob Generation ## Succeeded ##\n"
+		else
+			echo -e "`banename $outfile` Binary Blob Generation ## Failed ##"
+		fi
+
+		rm -f /tmp/$$.o
 	else
-		echo -e "`banename $outfile` Binary Blob Generation ## Failed ##"
-	fi
+		local size=$2
+		local fname=$1
+		local outfile=$3
 
-	rm -f /tmp/$$.o
+		if [ -z $size ]; then
+			usage
+		fi
+
+		if [ -z $fname ]; then
+			usage
+		fi
+
+		if [ -z $outfile ]; then
+			usage
+		fi
+
+		echo -e "# Building `basename $fname` #\n"
+		gcc -c $fname -o /tmp/$$.o -march=armv7-a
+		echo -e "# Generating `basename $outfile` #\n"
+		objcopy /tmp/$$.o -O binary --pad-to $size $outfile
+
+		retval=$?
+
+		if [ $retval -eq 0 ]; then
+			echo -e "`basename $outfile` Binary Blob Generation ## Succeeded ##\n"
+		else
+			echo -e "`banename $outfile` Binary Blob Generation ## Failed ##"
+		fi
+
+		rm -f /tmp/$$.o
+	fi
 }
 
 build_startup_code "$@"

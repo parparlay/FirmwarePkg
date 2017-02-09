@@ -31,5 +31,3 @@ echo -e "\nDone Composing combined $BOOT_IMAGE\n"
 rm -rf $TMP_DIR
 
 echo -e "Created combined $BOOT_IMAGE $TARGET at $BUILD_ROOT/$BOOT_IMAGE\n"
-
-
