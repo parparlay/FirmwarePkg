@@ -111,8 +111,9 @@
   # Boot Manager dependencies
   UefiBootManagerLib|MdeModulePkg/Library/UefiBootManagerLib/UefiBootManagerLib.inf
   BootLogoLib|MdeModulePkg/Library/BootLogoLib/BootLogoLib.inf
-  PlatformBootManagerLib|ArmPkg/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
+  PlatformBootManagerLib|FirmwarePkg/Boards/RaspberryPi2/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
   CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
+  SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
 
   # UiApp dependencies
   ReportStatusCodeLib|MdeModulePkg/Library/DxeReportStatusCodeLib/DxeReportStatusCodeLib.inf
@@ -259,11 +260,11 @@
   gEmbeddedTokenSpaceGuid.PcdPrePiProduceMemoryTypeInformationHob|TRUE
   gArmTokenSpaceGuid.PcdCpuDxeProduceDebugSupport|FALSE
 
-  gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|FALSE
+  gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|TRUE
 
   ## If TRUE, Graphics Output Protocol will be installed on virtual handle created by ConsplitterDxe.
   #  It could be set FALSE to save size.
-  gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|FALSE
+  gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|TRUE
 
   # The secondary cores are parked in the Pi2 boot firwmware. This flag triggers
   # the Pre Pi MP core component to send a signal releasing them (in the Pi 2 case
@@ -271,6 +272,7 @@
   # BCM specific GIC component in order to match the ARM GIC case)
   gArmPlatformTokenSpaceGuid.PcdSendSgiToBringUpSecondaryCores|TRUE
 
+  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdBootlogoOnlyEnable|TRUE
 [PcdsFixedAtBuild.common]
   gArmPlatformTokenSpaceGuid.PcdFirmwareVendor|"Raspberry Pi 2"
   gArmPlatformTokenSpaceGuid.PcdCoreCount|4
@@ -355,7 +357,6 @@
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderData|0
 
   gEfiMdePkgTokenSpaceGuid.PcdDefaultTerminalType|4
-  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdBootlogoOnlyEnable|TRUE
 
 !if $(SECURE_BOOT_ENABLE) == TRUE
   # override the default values from SecurityPkg to ensure images from all sources are verified in secure boot
@@ -499,7 +500,6 @@
   # Default boot options
   #
   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|3
-  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdShellFile|L"\\efi\\utils\\shell.efi"
 
   #
   # MBR+GPT Workaround for SD Card
@@ -522,14 +522,6 @@
   # Set this if the OS supports runtime pin muxing. This will leave pins as
   # GPIO by default, and it is the OS's responsibility to mux them away.
   gPi2BoardTokenSpaceGuid.PcdRuntimeMuxingEnabled|TRUE
-
-  # We want to use the Shell Libraries but don't want it to initialise
-  # automatically. We initialise the libraries when the command is called by the
-  # Shell.
-  gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
-
-  # UEFI Shell GUID
-  gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdShellFile|{ 0x83, 0xA5, 0x04, 0x7C, 0x3E, 0x9E, 0x1C, 0x4F, 0xAD, 0x65, 0xE0, 0x52, 0x68, 0xD0, 0xB4, 0xD1 }
 
   # UI app GUID
   gEfiMdeModulePkgTokenSpaceGuid.PcdBootManagerMenuFile|{ 0x21, 0xaa, 0x2c, 0x46, 0x14, 0x76, 0x03, 0x45, 0x83, 0x6e, 0x8a, 0xb6, 0xf4, 0x66, 0x23, 0x31 }

@@ -24,7 +24,7 @@ function usage()
 
 function build_startup_code()
 {
-	if [$TARGET_TOOLS == "ARMGCC"]; then
+	if [ $TARGET_TOOLS == "ARMGCC" ]; then
 		local size=$2
 		local fname=$1
 		local outfile=$3
