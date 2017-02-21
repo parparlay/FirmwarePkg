@@ -6,6 +6,8 @@ Copyright (c) Intel Corporation. All rights reserved.
 
 Copyright (c) Brian McKenzie <mckenzba@gmail.com>. All rights reserved.
 
+Copyright (c) Last Developer's <info@lastdevelopers.me>. All rights reserved.
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:

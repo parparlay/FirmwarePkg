@@ -177,11 +177,6 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
 
   #
-  # UEFI application (Shell Embedded Boot Loader)
-  #
-  INF ShellBinPkg/UefiShell/UefiShell.inf
-
-  #
   # SMBIOS Support
   #
   INF FirmwarePkg/Boards/RaspberryPi2/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
@@ -226,10 +221,6 @@ READ_LOCK_STATUS   = TRUE
     SECTION GUIDED EE4E5898-3914-4259-9D6E-DC7BD79403CF PROCESSING_REQUIRED = TRUE {
       SECTION FV_IMAGE = FVMAIN
     }
-  }
-
-  FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
-    SECTION RAW = FirmwarePkg/Drivers/LogoDxe/Logo.bmp
   }
 
 ################################################################################
