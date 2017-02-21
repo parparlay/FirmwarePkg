@@ -15,7 +15,7 @@ A one to download the EDK II, you should a clone this project:
     bash-4.4$ git clone --recursive https://github.com/LastDevelopers/FirmwarePkg
     bash-4.4$ make -C BaseTools
     bash-4.4$ . edksetup.sh
-    bash-4.4$ build -p FirmwarePkg/<Package to Specific board>.dsc -a <Arch to build> -n 4 -t GCC5
+    bash-4.4$ build -p FirmwarePkg/<Package to Specific board>.dsc -a <Arch to build> -n 4 -t GCC47
 
 The project supports a new boards to build in these target, you must check the support for you board in this project.
 
